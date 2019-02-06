@@ -1,6 +1,7 @@
+// app/nota/service.js
 import { handleStatus } from '../utils/promise-helpers.js';
-// importou compose
-import { partialize, compose } from '../utils/operators.js';
+// importou pipe no lugar de compose
+import { partialize, pipe } from '../utils/operators.js';
 
 const API = `http://localhost:3000/notas`;
 
@@ -20,14 +21,12 @@ export const notasService = {
   },
 
   sumItems(code) {
-
-    // realizando a composição
-    const sumItems = compose(
+    // usando pipe e alterando a ordem dos parâmetros
+    const sumItems = pipe(
+      getItemsFromNotas,
+      partialize(filterItemsByCode, '2143'),
       sumItemsValue,
-      partialize(filterItemsByCode, code),
-      getItemsFromNotas
     );
-
     return this.listAll().then(sumItems);
   }
 };
